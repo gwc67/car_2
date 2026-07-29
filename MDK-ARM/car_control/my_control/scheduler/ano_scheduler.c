@@ -11,6 +11,7 @@
 #include "tim.h"
 #include "OLED.h"
 #include "Drv\Motor\motor.h"
+#include "Drv\xvji\xvji.h"
 extern osThreadId_t task_10ms_highHandle;
 
 extern osThreadId_t task_10_ms_lowHandle;
@@ -64,6 +65,7 @@ void task_10ms_high_fun(void *argument)
   for(;;)
   {
     vTaskDelayUntil(&xLastWakeTime, xFlightCorePeriod);
+    xvji_sample();
     encoder_sample_all();
     menu_request_refresh(g_encode_pst);
     
