@@ -87,6 +87,12 @@ void Error_Handler(void);
 #define CE_GPIO_Port GPIOA
 #define CSN_Pin GPIO_PIN_15
 #define CSN_GPIO_Port GPIOA
+#define SCK_Pin GPIO_PIN_3
+#define SCK_GPIO_Port GPIOB
+#define MISO_Pin GPIO_PIN_4
+#define MISO_GPIO_Port GPIOB
+#define MOSI_Pin GPIO_PIN_5
+#define MOSI_GPIO_Port GPIOB
 #define OLED_SCK_Pin GPIO_PIN_8
 #define OLED_SCK_GPIO_Port GPIOB
 #define OLED_SDA_Pin GPIO_PIN_9

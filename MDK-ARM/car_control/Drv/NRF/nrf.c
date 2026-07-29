@@ -1,6 +1,6 @@
 #include "nrf.h"
 #include "nrf_define.h"
-#include "spi.h"
+// #include "spi.h"
 #include "driver_registry.h"
 
 /*
@@ -27,15 +27,100 @@ uint8_t NRF_RxPacket[NRF_RX_PACKET_WIDTH];
  * ================================================================ */
 #define CSN_LOW()  HAL_GPIO_WritePin(CSN_GPIO_Port, CSN_Pin, GPIO_PIN_RESET)
 #define CSN_HIGH() HAL_GPIO_WritePin(CSN_GPIO_Port, CSN_Pin, GPIO_PIN_SET)
+void NRF24L01_W_CE(uint8_t BitValue)
+{
+	/*根据BitValue的值，将CE置高电平或者低电平*/
+	HAL_GPIO_WritePin(CE_GPIO_Port, CE_Pin, (GPIO_PinState)BitValue);
+}
+
+/**
+  * 函    数：NRF24L01写CSN高低电平
+  * 参    数：要写入CSN的电平值，范围：0/1
+  * 返 回 值：无
+  * 说    明：当上层函数需要写CSN时，此函数会被调用
+  *           用户需要根据参数传入的值，将CSN置为高电平或者低电平
+  *           当参数传入0时，置CSN为低电平，当参数传入1时，置CSN为高电平
+  */
+void NRF24L01_W_CSN(uint8_t BitValue)
+{
+	/*根据BitValue的值，将CSN置高电平或者低电平*/
+	// GPIO_WriteBit(GPIOA, GPIO_Pin_1, (BitAction)BitValue);
+    HAL_GPIO_WritePin(CSN_GPIO_Port, CSN_Pin, (GPIO_PinState)BitValue);
+
+}
+
+/**
+  * 函    数：NRF24L01写SCK高低电平
+  * 参    数：要写入SCK的电平值，范围：0/1
+  * 返 回 值：无
+  * 说    明：当上层函数需要写SCK时，此函数会被调用
+  *           用户需要根据参数传入的值，将SCK置为高电平或者低电平
+  *           当参数传入0时，置SCK为低电平，当参数传入1时，置SCK为高电平
+  */
+void NRF24L01_W_SCK(uint8_t BitValue)
+{
+	/*根据BitValue的值，将SCK置高电平或者低电平*/
+    HAL_GPIO_WritePin(SCK_GPIO_Port, SCK_Pin, (GPIO_PinState)BitValue);
+}
+
+/**
+  * 函    数：NRF24L01写MOSI高低电平
+  * 参    数：要写入MOSI的电平值，范围：0/1
+  * 返 回 值：无
+  * 说    明：当上层函数需要写MOSI时，此函数会被调用
+  *           用户需要根据参数传入的值，将MOSI置为高电平或者低电平
+  *           当参数传入0时，置MOSI为低电平，当参数传入1时，置MOSI为高电平
+  */
+void NRF24L01_W_MOSI(uint8_t BitValue)
+{
+	/*根据BitValue的值，将MOSI置高电平或者低电平*/
+    HAL_GPIO_WritePin(MOSI_GPIO_Port, MOSI_Pin, (GPIO_PinState)BitValue);
+
+}
+
+uint8_t NRF24L01_R_MISO(void)
+{
+	/*取MISO引脚的高低电平并返回*/
+	return HAL_GPIO_ReadPin(MISO_GPIO_Port, MISO_Pin);
+}
 
 /* ================================================================
  * 硬件 SPI 字节交换
  * ================================================================ */
-static uint8_t spi_swap(uint8_t tx)
+static uint8_t spi_swap(uint8_t Byte)
 {
-    uint8_t rx;
-    HAL_SPI_TransmitReceive(&hspi1, &tx, &rx, 1, 10);
-    return rx;
+    uint8_t i;
+	
+	/*此处使用SPI模式0进行通信*/
+	/*循环8次，主机依次移出和移入数据的每一位*/
+	for (i = 0; i < 8; i ++)
+	{
+		/*SPI为高位先行，因此移出高位至MOSI引脚*/
+		if (Byte & 0x80)			//判断Byte的最高位
+		{
+			NRF24L01_W_MOSI(1);		//如果为1，则给MOSI输出1
+		}
+		else
+		{
+			NRF24L01_W_MOSI(0);		//如果为0，则给MOSI输出0
+		}
+		Byte <<= 1;					//Byte左移一位，最低位空出来用于接收数据位
+		
+		/*产生SCK上升沿*/
+		NRF24L01_W_SCK(1);
+		
+		/*从MISO引脚移入数据，存入Byte的最低位*/
+		if (NRF24L01_R_MISO())		//读取MISO引脚
+		{
+			Byte |= 0x01;			//如果为1，则给Byte最低位置1
+		}							//如果为0，则不做任何操作，因为左移后低位默认补0
+		
+		/*产生SCK下降沿*/
+		NRF24L01_W_SCK(0);
+	}
+	
+	/*返回Byte数据，此时的Byte为SPI交换接收得到的一个字节数据*/
+	return Byte;
 }
 
 /* ================================================================

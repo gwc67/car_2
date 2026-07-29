@@ -20,7 +20,7 @@
 #include "main.h"
 #include "cmsis_os.h"
 #include "dma.h"
-#include "spi.h"
+// #include "spi.h"
 #include "tim.h"
 #include "usart.h"
 #include "gpio.h"
@@ -97,7 +97,7 @@ int main(void)
   MX_TIM3_Init();
   MX_TIM4_Init();
   MX_USART1_UART_Init();
-  MX_SPI1_Init();
+  // MX_SPI1_Init();
   /* USER CODE BEGIN 2 */
 
   /* USER CODE END 2 */
@@ -181,6 +181,12 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   if (htim->Instance == TIM1)
   {
     HAL_IncTick();
+    if (task_1msHandle != NULL)
+    {
+      BaseType_t highTaskWoken = pdFALSE;
+      vTaskNotifyGiveFromISR(task_1msHandle, &highTaskWoken);
+      portYIELD_FROM_ISR(highTaskWoken); // 保证高优先级的能够抢占
+    }
   }
   /* USER CODE BEGIN Callback 1 */
 

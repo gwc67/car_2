@@ -28,10 +28,27 @@ void task_1ms_fun(void *argument)
   xTaskNotifyGive(task_10ms_highHandle);
   for(;;)
   {
-      
-      
-      
-      
+      /* 等待 1ms 定时器通知 — 必须阻塞, 否则低优先级任务永远无法运行 */
+      ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+
+      static uint32_t test_ul = 0;
+      static bool s_b = false;
+      uint32_t curr_tick_ul = xTaskGetTickCount();
+
+      if (curr_tick_ul - test_ul > 500)
+      {
+        test_ul = curr_tick_ul;
+        if (s_b == false)
+        {
+          s_b = true;
+          led_on(g_led_pid_gpio_pst);
+        }
+        else
+        {
+          s_b = false;
+          led_off(g_led_pid_gpio_pst);
+        }
+      }
   }
 
 }
@@ -53,6 +70,9 @@ void task_10ms_high_fun(void *argument)
     encoder_sample_all();
 
     /* NRF 收发: 收飞控指令 + 发状态 */
+    NRF_TxPacket[0] = 0x01;
+    NRF_TxPacket[1] = 0x02;
+    NRF_Send();
     NRF_Receive();
 
     menu_request_refresh(g_encode_pst);
@@ -76,24 +96,6 @@ void task_10ms_low_fun(void *argument)
         key_scan_v(xTaskGetTickCount());
         keyfunc_scan_v(xTaskGetTickCount());
         menu_task_v();
-        static uint32_t test_ul = 0;
-      static bool s_b = false;
-      uint32_t curr_tick_ul = xTaskGetTickCount();
-
-      if (curr_tick_ul - test_ul > 500)
-      {
-        test_ul = curr_tick_ul;
-        if (s_b == false)
-        {
-          s_b = true;
-          led_on(g_led_pid_gpio_pst);
-        }
-        else if (s_b == true)
-        {
-          s_b = false;
-          led_off(g_led_pid_gpio_pst);
-        }
-      }
     }
 
 }
