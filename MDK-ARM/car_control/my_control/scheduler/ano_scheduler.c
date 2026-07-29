@@ -42,9 +42,6 @@ void task_1ms_fun(void *argument)
           s_b = false;
           led_off(g_led_pid_gpio_pst);
         }
-        // OLED_Clear();
-        // OLED_Printf(0,0,OLED_8X16,"tick:%d",curr_tick_ul);
-        // OLED_Update();
       }
       
       
@@ -66,10 +63,7 @@ void task_10ms_high_fun(void *argument)
   for(;;)
   {
     vTaskDelayUntil(&xLastWakeTime, xFlightCorePeriod);
-
-    EncoderState_t encoder_pst[ENCODER_NUM];
     encoder_sample_all();
-    encoder_get_all(encoder_pst);
     menu_request_refresh(g_encode_pst);
   }
 
@@ -82,9 +76,8 @@ void task_10ms_low_fun(void *argument)
 
     TickType_t xLastWakeTime;
     const TickType_t xFlightCorePeriod = pdMS_TO_TICKS(10);
-    // 增加超时兜底，防止启动通知丢失卡死
     ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
-    xLastWakeTime = xTaskGetTickCount(); // 收到通知之后再初始化基准tick
+    xLastWakeTime = xTaskGetTickCount();
     for (;;)
     {
         vTaskDelayUntil(&xLastWakeTime, xFlightCorePeriod);

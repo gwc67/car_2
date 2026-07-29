@@ -155,6 +155,9 @@ static inline void menu_set_default_float(struct menu_node_t *n, float val)
 /* 恢复默认值 (长按 ENTER 触发) */
 void menu_reset_to_default(struct menu_node_t *n);
 
+/* 强制下一帧刷新（用于周期性任务，如 5Hz 数据更新） */
+void menu_force_refresh(void);
+
 /* 外部数据源请求刷新: 只有当 node 正在显示时才触发重绘
  * 用法: 在数据更新后调用 menu_request_refresh(&g_bat_st);
  *       不同数据源传不同 node, 互不干扰                       */
