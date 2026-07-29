@@ -92,6 +92,12 @@ targets:
         - ../Drivers/CMSIS/Include
         - .cmsis/include
         - RTE/_car_2
+        - car_control
+        - car_control/Drv/AutoInit
+        - car_control/Drv/Key
+        - car_control/my_control/scheduler
+        - car_control/Drv/OLED
+        - car_control/Drv/LED
       libList: []
     excludeList: []
     settings:

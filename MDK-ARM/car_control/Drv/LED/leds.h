@@ -5,12 +5,9 @@
 #include "led_base.h"
 extern LedBase *g_left_dir_gpio_pst;
 extern LedBase *g_right_dir_gpio_pst;
-extern LedBase *g_led_blue;
-extern LedBase *g_led_ano;
+extern LedBase *g_led_pid_gpio_pst;
 extern DelayBase *pst_os_delay;  
 extern DelayBase *pst_hal_delay; 
-extern LedBase *g_buzzer_pst;
-extern LedBase *g_lazzer_pst;
 
 void board_init(void);
 

@@ -9,7 +9,7 @@
  */
 
 #include "menu.h"
-#include "oled_gfx.h"
+#include "OLED.h"
 #include "stdio.h"
 
 /* 步进值表: 0.1, 1, 10, 100 — 双击 ENTER 循环 */

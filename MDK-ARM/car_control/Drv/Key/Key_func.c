@@ -1,10 +1,6 @@
 #include "Key_func.h"
 #include "driver_registry.h"
-#include "fly_task.h"
-#include "led_controller.h"
-#include "servos.h"
-#include "fly_task.h"
-#include "PID_ctrl.h"
+
 
 #define KEYFUNC_DOUBLE_MS 300       //双击
 #define KEYFUNC_LONG_MS   2000      //长按阈值
