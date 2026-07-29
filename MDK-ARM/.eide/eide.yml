@@ -5,6 +5,8 @@ deviceName: null
 packDir: null
 srcDirs:
   - car_control
+  - ../Core
+  - ../Drivers
 virtualFolder:
   name: <virtual_root>
   files: []
