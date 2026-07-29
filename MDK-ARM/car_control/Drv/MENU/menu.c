@@ -11,6 +11,7 @@
 #include "menu.h"
 #include "OLED.h"
 #include "stdio.h"
+#if USE_OLED_MENU
 
 /* 步进值表: 0.1, 1, 10, 100 — 双击 ENTER 循环 */
 const float s_menu_steps[MENU_STEP_COUNT] = { 0.01,0.1f,1.0f, 10.0f, 100.0f};
@@ -24,9 +25,9 @@ static bool s_editing = false;
 
 /* 按键映射 */
 #define KEY_MENU_UP     KEY_1_em
-#define KEY_MENU_DOWN   KEY_4_em
+#define KEY_MENU_DOWN   KEY_2_em
 #define KEY_MENU_ENTER  KEY_3_em
-#define KEY_MENU_BACK   KEY_2_em
+#define KEY_MENU_BACK   KEY_4_em
 
 /* 前向声明 */
 static void s_menu_folder_draw(struct menu_node_t *node);
@@ -419,3 +420,6 @@ void menu_task_v(void)
 
     OLED_Update();
 }
+
+
+#endif

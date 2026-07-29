@@ -12,7 +12,7 @@
  *
  *   g_root (Main)          ← 文件夹: 自动显示子项列表
  *   └─ g_menu_select       ← 文件夹: 自动显示子项列表
- *      ├─ g_item_que1      ← 叶子: draw 显示禁飞区数据
+ *      ├─ s_encode_st      ← 叶子: draw 显示禁飞区数据
  *      └─ g_item_que2      ← 叶子: draw 显示禁飞区数据
  *
  * 用户只需:

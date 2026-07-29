@@ -94,10 +94,12 @@ targets:
         - RTE/_car_2
         - car_control
         - car_control/Drv/AutoInit
+        - car_control/Drv/Encode
         - car_control/Drv/Key
         - car_control/my_control/scheduler
         - car_control/Drv/OLED
         - car_control/Drv/LED
+        - car_control/Drv/MENU
       libList: []
     excludeList: []
     settings:

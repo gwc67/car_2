@@ -18,10 +18,10 @@ struct key_hw_desc{
 };
 
 static const struct key_hw_desc s_key_hw_table[KEY_NUM_em] = {
-    [KEY_1_em]   = {.port_pst = Key1_GPIO_Port,.pin_us = Key1_Pin,.active_high = true},
+    [KEY_1_em]   = {.port_pst = Key1_GPIO_Port,.pin_us = Key1_Pin,.active_high = false},
     [KEY_2_em]   = {.port_pst = Key2_GPIO_Port,.pin_us = Key2_Pin,.active_high = false},  
-    [KEY_3_em]   = {.port_pst = Key3_GPIO_Port,.pin_us = Key3_Pin,.active_high = true}, 
-    [KEY_4_em]   = {.port_pst = Key4_GPIO_Port,.pin_us = Key4_Pin,.active_high = true},
+    [KEY_3_em]   = {.port_pst = Key3_GPIO_Port,.pin_us = Key3_Pin,.active_high = false}, 
+    [KEY_4_em]   = {.port_pst = Key4_GPIO_Port,.pin_us = Key4_Pin,.active_high = false},
 };
 
 struct key_runtime {

@@ -71,13 +71,6 @@ static void s_draw_question_1(struct menu_node_t *self)
     OLED_ShowString(0, 0, self->base.name, OLED_8X16);
     OLED_ShowString(0,20,"QUE1 SUCCESS!",OLED_8X16);
 }
-static void s_draw_question2_v(struct menu_node_t *self)
-{
-
-    OLED_ShowString(0,0,self->base.name,OLED_8X16);
-    OLED_ShowString(8,20,"QUE2 SUCCESS!",OLED_8X16);
-
-}
 #if PHASE_DEBUG
 
 
@@ -120,10 +113,7 @@ static void s_draw_phase(struct menu_node_t* me)
  * ================================================================ */
 
 struct menu_node_t g_root;
-//select下的文件
-static struct menu_node_t g_menu_select;
-static struct menu_node_t g_item_que1;
-static struct menu_node_t g_item_que2;
+static struct menu_node_t s_encode_st;
 
 
 static void s_build_menu_tree(void)
@@ -131,12 +121,7 @@ static void s_build_menu_tree(void)
     /* 根节点 (me 传结构体本身, 不传指针) */
     Create_Menu_Folder(NULL, g_root, "Main");
 
-    /* Select 文件夹 */
-    Create_Menu_Folder(&g_root, g_menu_select, "Select");
-    Create_Menu_Leaf(&g_menu_select, g_item_que1, "Question_1", s_draw_question_1);
-    Create_Menu_Leaf(&g_menu_select, g_item_que2, "Question_2", s_draw_question2_v);
-
-    
+    Create_Menu_Leaf(&g_root, s_encode_st, "encode", s_draw_question_1);
     
     /* 演示滚动: More 文件夹有 5 个子项 (超过 3 项自动滚动) */
 }

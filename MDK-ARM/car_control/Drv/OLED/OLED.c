@@ -25,7 +25,7 @@
 #include <math.h>
 #include <stdio.h>
 #include <stdarg.h>
-
+#include "driver_registry.h"
 /**
   * 数据存储格式：
   * 纵向8点，高位在下，先从左到右，再从上到下
@@ -257,6 +257,7 @@ void OLED_Init(void)
 	OLED_WriteCommand(0xAF);	//开启显示
 }
 
+DRIVER_INIT(OLED_Init);
 /**
   * 函    数：OLED设置显示光标位置
   * 参    数：Page 指定光标所在的页，范围：0~7

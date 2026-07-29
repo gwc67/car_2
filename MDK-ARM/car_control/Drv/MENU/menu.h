@@ -4,6 +4,10 @@
 #include "main.h"
 #include "Key_func.h"
 
+#define USE_OLED_MENU 1
+
+#if USE_OLED_MENU
+
 /*
  * 树形菜单系统 — Linux menuconfig 风格
  *
@@ -155,5 +159,8 @@ void menu_reset_to_default(struct menu_node_t *n);
  * 用法: 在数据更新后调用 menu_request_refresh(&g_bat_st);
  *       不同数据源传不同 node, 互不干扰                       */
 void menu_request_refresh(struct menu_base_t *base);
+
+#endif
+
 
 #endif /* __MENU_H */

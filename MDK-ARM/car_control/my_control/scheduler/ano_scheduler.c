@@ -5,6 +5,9 @@
 #include "cmsis_os2.h"
 #include "leds.h"
 
+#include "Drv_Key.h"
+#include "Key_func.h"
+#include "OLED_Menu.h"
 extern osThreadId_t task_10ms_highHandle;
 
 extern osThreadId_t task_10_ms_lowHandle;
@@ -14,7 +17,8 @@ void task_1ms_fun(void *argument)
 {
 
   driver_init_all();
-
+  xTaskNotifyGive(task_10_ms_lowHandle);
+  xTaskNotifyGive(task_10ms_highHandle);
   for(;;)
   {
       ulTaskNotifyTake(pdTRUE,portMAX_DELAY);
@@ -35,7 +39,9 @@ void task_1ms_fun(void *argument)
           s_b = false;
           led_off(g_led_pid_gpio_pst);
         }
-        
+        // OLED_Clear();
+        // OLED_Printf(0,0,OLED_8X16,"tick:%d",curr_tick_ul);
+        // OLED_Update();
       }
       
       
@@ -48,9 +54,16 @@ void task_1ms_fun(void *argument)
 void task_10ms_high_fun(void *argument)
 {
 
+    TickType_t xLastWakeTime;
+    const TickType_t xFlightCorePeriod = pdMS_TO_TICKS(10);
+    // 增加超时兜底，防止启动通知丢失卡死
+    ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+    xLastWakeTime = xTaskGetTickCount(); // 收到通知之后再初始化基准tick
+
   for(;;)
   {
-    osDelay(1);
+    vTaskDelayUntil(&xLastWakeTime, xFlightCorePeriod);
+
   }
 
 }
@@ -60,10 +73,19 @@ void task_10ms_high_fun(void *argument)
 void task_10ms_low_fun(void *argument)
 {
 
-  for(;;)
-  {
-    osDelay(1);
-  }
+    TickType_t xLastWakeTime;
+    const TickType_t xFlightCorePeriod = pdMS_TO_TICKS(10);
+    // 增加超时兜底，防止启动通知丢失卡死
+    ulTaskNotifyTake(pdTRUE, portMAX_DELAY);
+    xLastWakeTime = xTaskGetTickCount(); // 收到通知之后再初始化基准tick
+    for (;;)
+    {
+        vTaskDelayUntil(&xLastWakeTime, xFlightCorePeriod);
+
+        key_scan_v(xTaskGetTickCount());
+        keyfunc_scan_v(xTaskGetTickCount());
+        menu_task_v();
+    }
 
 }
 
