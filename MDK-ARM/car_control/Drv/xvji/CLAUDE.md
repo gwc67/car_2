@@ -1,10 +1,17 @@
-❯ @Core/Src/gpio.c  我现在有一个循迹模块，是5路黑白检测，我需要你帮我写一个驱动，gpio口分别是P0，P1，P2 ，P3，P4，我需要你帮我写一些驱动，使用轮询检测状态即可，
 
 
-可以定义一个 struct xvji_t 结构体 存放5路循迹模块的实时状态，我可以在上层通过 ， void xvji_copy (struct xvji_t *out) 来获取此时的实时循迹模块的状态，struct xvji_t {
-    bool P0_b;
-    bool P1_b;
-    bool P2_b;
-    bool P3_b;
-    bool P4_b;
-}; 分别对应gpio的 端口
+我更改了一下定义，你现在只需要完成目前的工作即可，
+
+目前循迹模块是4路，我需要它在内部自己完成状态量的给定，
+
+通过返回对应的
+enum xvji_state_e
+{
+    STRAGHIT_em,
+    LEFT_em,
+    RIGHT_em,
+    LEFT_HIGH_em,
+    RIGHT_HIGH_em,
+}
+
+s1 s2 s3 s4 从左往右依次的顺序
