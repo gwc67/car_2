@@ -95,3 +95,36 @@ void motor_task_v(void)
         break;
     }
 }
+
+
+
+//  void motor_task_v(void)
+//   {
+//       // 1. 从编码器获取当前速度
+//       EncoderState_t left, right;
+//       encoder_get_state(ENCODER_LEFT,  &left);
+//       encoder_get_state(ENCODER_RIGHT, &right);
+//       float cur_speed = (left.speed_pps + right.speed_pps) / 2.0f;
+
+//       // 2. 速度 PID: 目标速度 → PWM 基础值
+//       float target = 500.0f;  // 目标速度 pps (可绑到菜单)
+//       int32_t base_pwm = PID_Update_l(&g_speed_pid, target, cur_speed);
+
+//       // 3. 叠加差速转向 (根据循迹状态)
+//       enum xvji_state_e state = xvji_get_state();
+//       int32_t left_pwm  = base_pwm;
+//       int32_t right_pwm = base_pwm;
+
+//       switch (state) {
+//       case STRAIGHT_em:    /* 不调整 */                              break;
+//       case LEFT_em:        left_pwm -= 500;  right_pwm += 500;       break;
+//       case RIGHT_em:       left_pwm += 500;  right_pwm -= 500;       break;
+//       case LEFT_HIGH_em:   left_pwm  = -1000; right_pwm = 2500;      break;
+//       case RIGHT_HIGH_em:  left_pwm  = 2500;  right_pwm = -1000;     break;
+//       }
+
+//       motor_setspeed_left(left_pwm);
+//       motor_setspeed_right(right_pwm);
+//   }
+
+

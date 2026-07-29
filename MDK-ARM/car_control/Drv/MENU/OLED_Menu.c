@@ -17,6 +17,7 @@
 #include "encode.h"
 #include "driver_registry.h"
 #include "stdio.h"
+#include "..\NRF\nrf.h"
 
 
 #define FIRST_X    0
@@ -80,6 +81,21 @@ static void s_draw_encode(struct menu_node_t *self)
     OLED_Printf(0, 32, OLED_8X16, "R:%d %d pps", right.delta, right.speed_pps);
     OLED_Printf(0, 48, OLED_8X16, "T:%d %d",     left.total, right.total);
 }
+static void s_draw_nrf(struct menu_node_t *self)
+{
+    OLED_ShowString(0, 0, self->base.name, OLED_8X16);
+
+    uint8_t r[8];
+    NRF_DumpRegs(r);
+
+    // 预期值               正常读回
+    // CONFIG=0x08      STATUS=0x0E (RX_DR=0,TX_DS=0,MAX_RT=0, 上电默认)
+    // EN_AA=0x3F       FIFO_STATUS=0x11 (Tx空,Rx空)
+
+    OLED_Printf(0, 16, OLED_6X8, "CFG:%02X AA:%02X RX:%02X", r[0], r[1], r[2]);
+    OLED_Printf(0, 28, OLED_6X8, "RETR:%02X CH:%02X RF:%02X", r[3], r[4], r[5]);
+    OLED_Printf(0, 40, OLED_6X8, "ST:%02X FI:%02X", r[6], r[7]);
+}
 #if PHASE_DEBUG
 
 
@@ -125,6 +141,7 @@ struct menu_node_t g_root;
 static struct menu_node_t s_encode_st;
 static struct menu_node_t select;
 struct menu_base_t* g_encode_pst;
+static struct menu_node_t s_nrf_st;
 
 static void s_build_menu_tree(void)
 {
@@ -134,6 +151,7 @@ static void s_build_menu_tree(void)
     Create_Menu_Folder(&g_root, select, "select");
 
     g_encode_pst = Create_Menu_Leaf(&select, s_encode_st, "encode", s_draw_encode);
+    Create_Menu_Leaf(&select, s_nrf_st, "nrf", s_draw_nrf);
     
     /* 演示滚动: More 文件夹有 5 个子项 (超过 3 项自动滚动) */
 }
