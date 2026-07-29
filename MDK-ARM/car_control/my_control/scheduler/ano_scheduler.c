@@ -4,10 +4,12 @@
 #include "driver_registry.h"
 #include "cmsis_os2.h"
 #include "leds.h"
-
+#include "encode.h"
 #include "Drv_Key.h"
 #include "Key_func.h"
 #include "OLED_Menu.h"
+#include "tim.h"
+#include "OLED.h"
 extern osThreadId_t task_10ms_highHandle;
 
 extern osThreadId_t task_10_ms_lowHandle;
@@ -17,6 +19,7 @@ void task_1ms_fun(void *argument)
 {
 
   driver_init_all();
+  HAL_TIM_Encoder_Start(&htim3,TIM_CHANNEL_ALL);
   xTaskNotifyGive(task_10_ms_lowHandle);
   xTaskNotifyGive(task_10ms_highHandle);
   for(;;)
@@ -64,6 +67,10 @@ void task_10ms_high_fun(void *argument)
   {
     vTaskDelayUntil(&xLastWakeTime, xFlightCorePeriod);
 
+    EncoderState_t encoder_pst[ENCODER_NUM];
+    encoder_sample_all();
+    encoder_get_all(encoder_pst);
+    menu_request_refresh(g_encode_pst);
   }
 
 }

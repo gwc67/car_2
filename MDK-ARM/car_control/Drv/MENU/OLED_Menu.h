@@ -22,13 +22,8 @@
  */
 
 /* 根节点 (外部可见, 用于 menu_navigate_v 等) */
-extern struct menu_node_t g_root;
-extern struct menu_base_t* g_battery_oled_pst;
-extern struct menu_base_t* g_jesnano_pos_oled_pst;
-extern struct menu_base_t* g_jesnano_qua_oled_pst;
-extern struct menu_base_t* g_jesnano_yaw_oled_pst;
-extern struct menu_base_t* g_jesnano_speed_oled_pst;
-extern struct menu_base_t* g_delivery_oled_pst;
+extern struct menu_base_t* g_encode_pst;
+
 /* 初始化: 构建菜单树 + 注册按键订阅 */
 
 #endif /* OLED_MENU_H */

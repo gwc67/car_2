@@ -14,6 +14,7 @@
 
 #include "OLED_Menu.h"
 #include "OLED.h"
+#include "encode.h"
 #include "driver_registry.h"
 #include "stdio.h"
 
@@ -66,10 +67,18 @@ static float s_kd_f = 0.5;
  * ================================================================ */
 
 /* Que1/Que2 共用: 显示禁飞区数据 */
-static void s_draw_question_1(struct menu_node_t *self)
+static void s_draw_encode(struct menu_node_t *self)
 {
     OLED_ShowString(0, 0, self->base.name, OLED_8X16);
-    OLED_ShowString(0,20,"QUE1 SUCCESS!",OLED_8X16);
+
+    EncoderState_t left, right;
+    encoder_get_state(ENCODER_LEFT, &left);
+    encoder_get_state(ENCODER_RIGHT, &right);
+
+    /* 128x64, 8x16 font = 16col x 4row */
+    OLED_Printf(0, 16, OLED_8X16, "L:%d %d pps", left.delta, left.speed_pps);
+    OLED_Printf(0, 32, OLED_8X16, "R:%d %d pps", right.delta, right.speed_pps);
+    OLED_Printf(0, 48, OLED_8X16, "T:%d %d",     left.total, right.total);
 }
 #if PHASE_DEBUG
 
@@ -114,14 +123,17 @@ static void s_draw_phase(struct menu_node_t* me)
 
 struct menu_node_t g_root;
 static struct menu_node_t s_encode_st;
-
+static struct menu_node_t select;
+struct menu_base_t* g_encode_pst;
 
 static void s_build_menu_tree(void)
 {
     /* 根节点 (me 传结构体本身, 不传指针) */
     Create_Menu_Folder(NULL, g_root, "Main");
 
-    Create_Menu_Leaf(&g_root, s_encode_st, "encode", s_draw_question_1);
+    Create_Menu_Folder(&g_root, select, "select");
+
+    g_encode_pst = Create_Menu_Leaf(&select, s_encode_st, "encode", s_draw_encode);
     
     /* 演示滚动: More 文件夹有 5 个子项 (超过 3 项自动滚动) */
 }
