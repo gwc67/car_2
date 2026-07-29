@@ -10,6 +10,7 @@
 #include "OLED_Menu.h"
 #include "tim.h"
 #include "OLED.h"
+#include "Drv\Motor\motor.h"
 extern osThreadId_t task_10ms_highHandle;
 
 extern osThreadId_t task_10_ms_lowHandle;
@@ -65,6 +66,7 @@ void task_10ms_high_fun(void *argument)
     vTaskDelayUntil(&xLastWakeTime, xFlightCorePeriod);
     encoder_sample_all();
     menu_request_refresh(g_encode_pst);
+    motor_setspeed_right(50);
   }
 
 }

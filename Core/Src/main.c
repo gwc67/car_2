@@ -180,12 +180,6 @@ void HAL_TIM_PeriodElapsedCallback(TIM_HandleTypeDef *htim)
   if (htim->Instance == TIM1)
   {
     HAL_IncTick();
-    if (task_1msHandle != NULL)
-    {
-      BaseType_t highTaskWoken = pdFALSE;
-      vTaskNotifyGiveFromISR(task_1msHandle, &highTaskWoken);
-      portYIELD_FROM_ISR(highTaskWoken); // 保证高优先级的能够抢占
-    }
   }
   /* USER CODE BEGIN Callback 1 */
 
