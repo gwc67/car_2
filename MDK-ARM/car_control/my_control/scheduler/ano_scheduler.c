@@ -12,6 +12,8 @@
 #include "OLED.h"
 #include "Drv\Motor\motor.h"
 #include "Drv\xvji\xvji.h"
+#include "Drv\NRF\nrf.h"
+
 extern osThreadId_t task_10ms_highHandle;
 
 extern osThreadId_t task_10_ms_lowHandle;
@@ -26,25 +28,7 @@ void task_1ms_fun(void *argument)
   xTaskNotifyGive(task_10ms_highHandle);
   for(;;)
   {
-      ulTaskNotifyTake(pdTRUE,portMAX_DELAY);
-      static uint32_t test_ul = 0;
-      static bool s_b = false;
-      uint32_t curr_tick_ul = xTaskGetTickCount();
-
-      if (curr_tick_ul - test_ul > 500)
-      {
-        test_ul = curr_tick_ul;
-        if (s_b == false)
-        {
-          s_b = true;
-          led_on(g_led_pid_gpio_pst);
-        }
-        else if (s_b == true)
-        {
-          s_b = false;
-          led_off(g_led_pid_gpio_pst);
-        }
-      }
+      
       
       
       
@@ -67,9 +51,11 @@ void task_10ms_high_fun(void *argument)
     vTaskDelayUntil(&xLastWakeTime, xFlightCorePeriod);
     xvji_sample();
     encoder_sample_all();
+
+    /* NRF 收发: 收飞控指令 + 发状态 */
+    NRF_Receive();
+
     menu_request_refresh(g_encode_pst);
-    
-    // motor_setspeed_right(50);
   }
 
 }
@@ -90,6 +76,24 @@ void task_10ms_low_fun(void *argument)
         key_scan_v(xTaskGetTickCount());
         keyfunc_scan_v(xTaskGetTickCount());
         menu_task_v();
+        static uint32_t test_ul = 0;
+      static bool s_b = false;
+      uint32_t curr_tick_ul = xTaskGetTickCount();
+
+      if (curr_tick_ul - test_ul > 500)
+      {
+        test_ul = curr_tick_ul;
+        if (s_b == false)
+        {
+          s_b = true;
+          led_on(g_led_pid_gpio_pst);
+        }
+        else if (s_b == true)
+        {
+          s_b = false;
+          led_off(g_led_pid_gpio_pst);
+        }
+      }
     }
 
 }

@@ -85,16 +85,18 @@ static void s_draw_nrf(struct menu_node_t *self)
 {
     OLED_ShowString(0, 0, self->base.name, OLED_8X16);
 
-    uint8_t r[8];
-    NRF_DumpRegs(r);
+    /* 显示飞控发来的指令 (NRF_RxPacket 8 字节) */
+    OLED_Printf(0, 16, OLED_6X8, "RX:%02X %02X %02X %02X",
+                NRF_RxPacket[0], NRF_RxPacket[1],
+                NRF_RxPacket[2], NRF_RxPacket[3]);
+    OLED_Printf(0, 28, OLED_6X8, "   %02X %02X %02X %02X",
+                NRF_RxPacket[4], NRF_RxPacket[5],
+                NRF_RxPacket[6], NRF_RxPacket[7]);
 
-    // 预期值               正常读回
-    // CONFIG=0x08      STATUS=0x0E (RX_DR=0,TX_DS=0,MAX_RT=0, 上电默认)
-    // EN_AA=0x3F       FIFO_STATUS=0x11 (Tx空,Rx空)
-
-    OLED_Printf(0, 16, OLED_6X8, "CFG:%02X AA:%02X RX:%02X", r[0], r[1], r[2]);
-    OLED_Printf(0, 28, OLED_6X8, "RETR:%02X CH:%02X RF:%02X", r[3], r[4], r[5]);
-    OLED_Printf(0, 40, OLED_6X8, "ST:%02X FI:%02X", r[6], r[7]);
+    /* 把前2字节当 int16 解析 (speed, turn) */
+    int16_t speed = (int16_t)(NRF_RxPacket[0] | (NRF_RxPacket[1] << 8));
+    int16_t turn  = (int16_t)(NRF_RxPacket[2] | (NRF_RxPacket[3] << 8));
+    OLED_Printf(0, 44, OLED_8X16, "S:%d T:%d", speed, turn);
 }
 #if PHASE_DEBUG
 
