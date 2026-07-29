@@ -35,102 +35,12 @@ void PID_Init(void)
 
     
 
-    // // X 轴 PID
-    // loc_xyz_pst[X_em].Kp_f = 0.18f;
-    // loc_xyz_pst[X_em].Ki_f = 0.12f;
-    // loc_xyz_pst[X_em].Kd_f = 0.7f;
-
-    // loc_xyz_pst[X_em].output_max_l   = 23;
-    // loc_xyz_pst[X_em].output_min_l   = -23;
-    // loc_xyz_pst[X_em].integral_max_l = 5;
-    // loc_xyz_pst[X_em].I_Band_l       = 35;
-
-    // loc_xyz_pst[X_em].integral_f          = 0.0f;
-    // loc_xyz_pst[X_em].prev_measurement_f  = 0.0f;
-    // loc_xyz_pst[X_em].prev_d_filtered_f   = 0.0f;
-    // loc_xyz_pst[X_em].d_filter_alpha_f    = 0.8f;
-
-    // // Y 轴 = X 轴
-    // loc_xyz_pst[Y_em] = loc_xyz_pst[X_em];
-
-    // // Z 轴 PID
-    // loc_xyz_pst[Z_em].Kp_f = 0.23f;
-    // loc_xyz_pst[Z_em].Ki_f = 0.03f;
-    // loc_xyz_pst[Z_em].Kd_f = 0.08f;
-
-    // loc_xyz_pst[Z_em].output_max_l   = 20;
-    // loc_xyz_pst[Z_em].output_min_l   = -20;
-    // loc_xyz_pst[Z_em].integral_max_l = 5;
-    // loc_xyz_pst[Z_em].I_Band_l       = 20;
-
-    // loc_xyz_pst[Z_em].integral_f          = 0.0f;
-    // loc_xyz_pst[Z_em].prev_measurement_f  = 0.0f;
-    // loc_xyz_pst[Z_em].prev_d_filtered_f   = 0.0f;
-    // loc_xyz_pst[Z_em].d_filter_alpha_f    = 0.8f;
-
-    // // Yaw 轴 PID
-    // loc_xyz_pst[Yaw_em].Kp_f = 0.35f;
-    // loc_xyz_pst[Yaw_em].Ki_f = 0.1f;
-    // loc_xyz_pst[Yaw_em].Kd_f = 0.15f;
-
-    // loc_xyz_pst[Yaw_em].output_max_l   = 30;
-    // loc_xyz_pst[Yaw_em].output_min_l   = -30;
-    // loc_xyz_pst[Yaw_em].integral_max_l = 10;
-    // loc_xyz_pst[Yaw_em].I_Band_l       = 20;
-
-    // loc_xyz_pst[Yaw_em].integral_f          = 0.0f;
-    // loc_xyz_pst[Yaw_em].prev_measurement_f  = 0.0f;
-    // loc_xyz_pst[Yaw_em].prev_d_filtered_f   = 0.0f;
-    // loc_xyz_pst[Yaw_em].d_filter_alpha_f    = 0.8f;
-
-    // // 摄像头 X 轴 PID
-    // cam_xy_pst[X_em].Kp_f = 0.40f;
-    // cam_xy_pst[X_em].Ki_f = 0.16f;
-    // cam_xy_pst[X_em].Kd_f = 0.33f;
-
-    // cam_xy_pst[X_em].output_max_l   = 4;
-    // cam_xy_pst[X_em].output_min_l   = -4;
-    // cam_xy_pst[X_em].integral_max_l = 3;
-    // cam_xy_pst[X_em].I_Band_l       = 18;
-
-    // cam_xy_pst[X_em].integral_f          = 0.0f;
-    // cam_xy_pst[X_em].prev_measurement_f  = 0.0f;
-    // cam_xy_pst[X_em].prev_d_filtered_f   = 0.0f;
-    // cam_xy_pst[X_em].d_filter_alpha_f    = 0.8f;
-
-    // // 摄像头 Y 轴 = X 轴
-    // cam_xy_pst[Y_em] = cam_xy_pst[X_em];
+   
 }
 
 DRIVER_INIT(PID_Init);
 
 
-// int32_t float_to_int32_l(float f)
-// {
-//     if (isnan(f))
-//     {
-//         return 0;
-//     }
-
-//     if (f >= (float)INT32_MAX + 0.5f)
-//     {
-//         return INT32_MAX;
-//     }
-//     else if (f <= (float)INT32_MIN - 0.5f)
-//     {
-//         return INT32_MIN;
-//     }
-
-//     return (f >= 0.0f ? (int32_t)(f + 0.5f) : (int32_t)(f - 0.5f));
-// }
-
-
-float angleDifference_f(float target, float current) {
-    float error = target - current;
-    while (error > 180.0f) error -= 360.0f;
-    while (error < -180.0f) error += 360.0f;
-    return error;
-}
 
 
 int32_t PID_Update_l(struct AdaptivePID_t* pid_pst, float setpoint_f, float measurement_f)

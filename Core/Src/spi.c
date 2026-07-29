@@ -19,9 +19,10 @@
 /* USER CODE END Header */
 /* Includes ------------------------------------------------------------------*/
 #include "spi.h"
-
+// #include "main.h"
 /* USER CODE BEGIN 0 */
-
+#include "stm32f1xx_hal_spi.h"
+#include "D:\Downloads\stm32project\car_2\Drivers\STM32F1xx_HAL_Driver\Inc\stm32f1xx_hal_spi.h"
 /* USER CODE END 0 */
 
 SPI_HandleTypeDef hspi1;

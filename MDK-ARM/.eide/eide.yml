@@ -102,6 +102,7 @@ targets:
         - car_control/Drv/OLED
         - car_control/Drv/LED
         - car_control/Drv/MENU
+        - ../Drivers/STM32F1xx_HAL_Driver/Src
       libList: []
     excludeList: []
     settings:

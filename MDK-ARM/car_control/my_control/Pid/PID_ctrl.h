@@ -1,34 +1,46 @@
-// #ifndef __PID_CTRL_H
-// #define __PID_CTRL_H
+#ifndef __PID_CTRL_H
+#define __PID_CTRL_H
 
-// #include "main.h"
+#include "main.h"
 
-// typedef struct AdaptivePID_t AdaptivePID_t;
+typedef struct AdaptivePID_t AdaptivePID_t;
 
-// // 初始化
-// void PID_Init(void);
+struct AdaptivePID_t {
+    float Kp_f, Ki_f, Kd_f;
 
-// // 访问器函数（返回单个轴的 PID 实例指针）
-// AdaptivePID_t* pid_get_loc_xyz(uint8_t axis_uc);
-// AdaptivePID_t* pid_get_cam_xy(uint8_t axis_uc);
+    float integral_f;
+    float prev_measurement_f;
+    float prev_d_filtered_f;
+    float error_f;
 
-// // PID 更新
-// int32_t PID_Update_l(AdaptivePID_t* pid_pst, float setpoint_f, float measurement_f);
-// int32_t Yaw_PID_Update(float setpoint_f, float measurement_f);
+    int32_t output_max_l;
+    int32_t output_min_l;
+    int32_t integral_max_l;
+    int32_t I_Band_l;
 
-// // 输出限幅
-// void PID_SetXY_ABS_OutputMax_v(AdaptivePID_t* pid_pst, int32_t ABS_OutputMax_l);
+    float d_filter_alpha_f;
 
-// // 获取 PID 状态
-// float Get_PID_Error_f(AdaptivePID_t* pid_pst);
+    uint32_t delat_time_ul;
+    uint32_t last_time_ul;
+};
 
-// void pid_reset_v(AdaptivePID_t* pid_pst);
-// void pid_reset_prev_measurement(struct AdaptivePID_t* pid_pst);
+/* ---- 全局 PID 实例 ---- */
+extern struct AdaptivePID_t g_speed_pid;   // 速度环
+extern struct AdaptivePID_t g_turn_pid;    // 转向环
 
-// float angleDifference_f(float target, float current);
+/* ---- 初始化 ---- */
+void PID_Init(void);
 
-// void pid_set_xy_kp(float kp_f);
-// void pid_set_xy_ki(float ki_f);
-// void pid_set_xy_kd(float kd_f);
+/* ---- PID 更新 ---- */
+int32_t PID_Update_l(struct AdaptivePID_t *pid_pst, float setpoint_f, float measurement_f);
 
-// #endif
+/* ---- 辅助 ---- */
+void pid_reset_v(struct AdaptivePID_t *pid_pst);
+float Get_PID_Error_f(struct AdaptivePID_t *pid_pst);
+
+/* ---- 热调参 (OLED 菜单用) ---- */
+void pid_speed_set_kp(float val);
+void pid_speed_set_ki(float val);
+void pid_speed_set_kd(float val);
+
+#endif
