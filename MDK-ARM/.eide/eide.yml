@@ -3,7 +3,8 @@ name: car_2
 type: ARM
 deviceName: null
 packDir: null
-srcDirs: []
+srcDirs:
+  - car_control
 virtualFolder:
   name: <virtual_root>
   files: []
